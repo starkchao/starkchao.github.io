@@ -3,7 +3,7 @@
   <entry>
     <title><![CDATA[First Step]]></title>
     <url>%2F2017%2F05%2F31%2FFirstBlog%2F</url>
-    <content type="text"><![CDATA[这是我的第一篇博文，采用了hexo + Github Pages构建博客网站，其中还用到了node.js 和 git。 构建博客网站的工作并不复杂，过程就不再赘述了OVO，给出一些建站的参考网站： Reference URL： GitPages + Hexo从0到1搭建个人博客 Hexo在github上构建免费的Web应用 NexT主题 从这篇文章开始，来看看会发生什么。]]></content>
+    <content type="text"><![CDATA[这是我的第一篇博文，采用了hexo + Github Pages构建博客网站，其中还用到了node.js和 git。 构建博客网站的工作并不复杂，过程就不再赘述了OVO，给出一些建站的参考网站： Reference URL： GitPages + Hexo从0到1搭建个人博客 Hexo在github上构建免费的Web应用 NexT主题 从这篇文章开始，来看看会发生什么。]]></content>
       <tags>
         <tag>first</tag>
         <tag>构建</tag>
