@@ -1,6 +1,6 @@
 ---
 title: xdebug -- debug tool for php
-date: 2017-05-31 18:07:09
+date: 2017-06-01 16:39:09
 tags: 
 - xdebug 
 - php 
