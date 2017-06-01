@@ -74,7 +74,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="xdebug,php,phpstorm," />
 
 
 
@@ -90,15 +90,27 @@
 
 
 
-<meta name="description" content="Sow nothing, reap nothing.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Stark">
-<meta property="og:url" content="http://yoursite.com/tags/构建/index.html">
+<meta name="description" content="如果你现在的调试还是在使用var_dump()或者print_r()，那么xdebug可能会让你的调试更加得心应手，就像平常断点单步调试一样，你可以直观的看见所有的过程与值。">
+<meta name="keywords" content="xdebug,php,phpstorm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="xdebug -- debug tool for php">
+<meta property="og:url" content="http://yoursite.com/2017/05/31/xdebug/index.html">
 <meta property="og:site_name" content="Stark">
-<meta property="og:description" content="Sow nothing, reap nothing.">
+<meta property="og:description" content="如果你现在的调试还是在使用var_dump()或者print_r()，那么xdebug可能会让你的调试更加得心应手，就像平常断点单步调试一样，你可以直观的看见所有的过程与值。">
+<meta property="og:image" content="http://yoursite.com/img/2017/06/01/xdebug-config.jpg">
+<meta property="og:image" content="http://yoursite.com/img/2017/06/01/xdebug-config.jpg">
+<meta property="og:image" content="http://yoursite.com/img/2017/06/01/xdebug-port.gif">
+<meta property="og:image" content="http://yoursite.com/img/2017/06/01/DBGp-proxy.gif">
+<meta property="og:image" content="http://yoursite.com/img/2017/06/01/xdebug-helper.png">
+<meta property="og:image" content="http://yoursite.com/img/2017/06/01/start-listening.png">
+<meta property="og:image" content="http://yoursite.com/img/2017/06/01/debug.png">
+<meta property="og:image" content="http://yoursite.com/img/2017/06/01/accept.png">
+<meta property="og:image" content="http://yoursite.com/img/2017/06/01/debug-console.png">
+<meta property="og:updated_time" content="2017-06-01T08:29:10.188Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Stark">
-<meta name="twitter:description" content="Sow nothing, reap nothing.">
+<meta name="twitter:title" content="xdebug -- debug tool for php">
+<meta name="twitter:description" content="如果你现在的调试还是在使用var_dump()或者print_r()，那么xdebug可能会让你的调试更加得心应手，就像平常断点单步调试一样，你可以直观的看见所有的过程与值。">
+<meta name="twitter:image" content="http://yoursite.com/img/2017/06/01/xdebug-config.jpg">
 
 
 
@@ -126,13 +138,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/构建/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/05/31/xdebug/"/>
 
 
 
 
 
-  <title>标签: 构建 | Stark</title>
+  <title>xdebug -- debug tool for php | Stark</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -158,7 +170,7 @@
     
   
 
-  <div class="container sidebar-position-left  ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -276,44 +288,186 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h1>构建<small>标签</small>
-      </h1>
-    </div>
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/31/xdebug/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chao Wan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Stark">
+    </span>
 
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">xdebug -- debug tool for php</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-31T18:07:09+08:00">
+                2017-05-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
       
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+      
+        <p>如果你现在的调试还是在使用var_dump()或者print_r()，那么xdebug可能会让你的调试更加得心应手，就像平常断点单步调试一样，你可以直观的看见所有的过程与值。<br><a id="more"></a><br>与任何东西的学习方式一样，<strong>官方文档</strong> 永远是最好的老师：</p>
+<blockquote>
+<p><a href="https://xdebug.org/docs/" target="_blank" rel="external">xdebug官方文档</a><br>  :) 什么？你不想看英文文档？</p>
+</blockquote>
+<hr>
+<p>还好你找到了这里~下边是linux下xdebug的安装及配置方法：</p>
+<h4 id="Step-1-下载并解压xdebug扩展包"><a href="#Step-1-下载并解压xdebug扩展包" class="headerlink" title="Step 1 下载并解压xdebug扩展包"></a>Step 1 下载并解压xdebug扩展包</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">wget https://xdebug.org/files/xdebug-2.5.4.tgz</div><div class="line">tar -zxvf xdebug-2.5.4.tgz</div></pre></td></tr></table></figure>
+<p>Tips：</p>
+<ul>
+<li>具体下载哪个版本的包，可以到xdebug的download页面查找：<a href="https://xdebug.org/download.php" target="_blank" rel="external">download</a></li>
+<li>windows用户下载.dll后缀的文件，linux用户下载source包</li>
+</ul>
+<h4 id="Step-2-编译xdebug"><a href="#Step-2-编译xdebug" class="headerlink" title="Step 2 编译xdebug"></a>Step 2 编译xdebug</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">cd debug-2.5.4</div><div class="line">phpize（编译你要添加的扩展模块的命令）</div><div class="line">./configure</div><div class="line">make</div><div class="line">cp modules/xdebug.so /usr/local/php-7.0.9/lib/php/extensions/no-debug-non-zts-20151012</div></pre></td></tr></table></figure>
+<h4 id="Step-3-配置php-ini"><a href="#Step-3-配置php-ini" class="headerlink" title="Step 3 配置php.ini"></a>Step 3 配置php.ini</h4><p>对于<strong>PHP5.3之前</strong>的版本：</p>
+<blockquote>
+<p>add: <strong>zend_extension_ts</strong>=”/wherever/you/put/it/xdebug.so”</p>
+</blockquote>
+<p>对于<strong>PHP5.3之后</strong>的版本（我的php版本是7.0.9）：</p>
+<blockquote>
+<p>From PHP 5.3 onwards, <strong>you always need to use the zend_extension PHP.ini setting name</strong>, and not zend_extension_ts, nor zend_extension_debug.</p>
+</blockquote>
+<p>在我的php.ini中，关于xdebug的配置如下：<br><img src="/img/2017/06/01/xdebug-config.jpg" alt="xdebug-config"><br>[//]: <img src="/img/2017/06/01/xdebug-config.jpg" width="100" height="100" alt="xdebug-config"></p>
+<p>其中remote_host与remote_port按照自己的需求指定。<br>保存php.ini后重启apache或nginx。</p>
+<h4 id="Step-4-配置phpstorm的xdebug"><a href="#Step-4-配置phpstorm的xdebug" class="headerlink" title="Step 4 配置phpstorm的xdebug"></a>Step 4 配置phpstorm的xdebug</h4><h5 id="1-指定xdebug-port"><a href="#1-指定xdebug-port" class="headerlink" title="1. 指定xdebug port"></a>1. 指定xdebug port</h5><p><img src="/img/2017/06/01/xdebug-port.gif" alt="xdebug-port"><br>这里的port需要与php.ini配置的remote_port一致。</p>
+<h5 id="2-配置DBGp-Proxy"><a href="#2-配置DBGp-Proxy" class="headerlink" title="2. 配置DBGp Proxy"></a>2. 配置DBGp Proxy</h5><p><img src="/img/2017/06/01/DBGp-proxy.gif" alt="DBGp-proxy"><br>IDE Key：与php.ini中xdebug.idekey相同<br>Host：项目所在位置<br>Port：项目监听端口</p>
+<h4 id="Step-5-安装chrome扩展-Xdebug-helper"><a href="#Step-5-安装chrome扩展-Xdebug-helper" class="headerlink" title="Step 5 安装chrome扩展 Xdebug helper"></a>Step 5 安装chrome扩展 Xdebug helper</h4><p><img src="/img/2017/06/01/xdebug-helper.png" alt="xdebug-helper"><br>在IDE Key中选择PhpStorm，并设置Key为PHPSTORM（与之前的xdebug.idekey相同即可）</p>
+<hr>
+<p>到此为止，所有的准备工作就已经完成了，下面来测试一下~！</p>
+<h4 id="Step-6-测试"><a href="#Step-6-测试" class="headerlink" title="Step 6 测试"></a>Step 6 测试</h4><ol>
+<li>在phpstorm中设置代码断点，然后开启debug监听<br><img src="/img/2017/06/01/start-listening.png" alt="start-listening"></li>
+<li>打开浏览器中Xdebug helper的debug模式<br><img src="/img/2017/06/01/debug.png" alt="debug"></li>
+<li>访问存在断点的代码位置<br>如果没问题的话，在phpstorm中应该可以看到：<br><img src="/img/2017/06/01/accept.png" alt="accept"></li>
+<li>进入debug控制台<br>点击accept就可以看到debug控制台了<br><img src="/img/2017/06/01/debug-console.png" alt="debug-console"></li>
+</ol>
+<p>that’s done~!</p>
 
-      <h2 class="post-title">
+      
+    </div>
+
+    <div>
+      
         
-            <a class="post-title-link" href="/2017/05/31/first-blog/" itemprop="url">
-              
-                <span itemprop="name">First Step</span>
-              
-            </a>
+
+      
+    </div>
+
+    <div>
+      
         
-      </h2>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-05-31T15:04:24+08:00"
-              content="2017-05-31" >
-          05-31
-        </time>
-      </div>
+      
+    </div>
 
-    </header>
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/xdebug/" rel="tag"># xdebug</a>
+          
+            <a href="/tags/php/" rel="tag"># php</a>
+          
+            <a href="/tags/phpstorm/" rel="tag"># phpstorm</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/31/first-blog/" rel="next" title="First Step">
+                <i class="fa fa-chevron-left"></i> First Step
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </article>
 
 
-    
-  </div>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -321,6 +475,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -340,8 +498,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.jpg"
@@ -394,6 +561,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Step-1-下载并解压xdebug扩展包"><span class="nav-number">1.</span> <span class="nav-text">Step 1 下载并解压xdebug扩展包</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Step-2-编译xdebug"><span class="nav-number">2.</span> <span class="nav-text">Step 2 编译xdebug</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Step-3-配置php-ini"><span class="nav-number">3.</span> <span class="nav-text">Step 3 配置php.ini</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Step-4-配置phpstorm的xdebug"><span class="nav-number">4.</span> <span class="nav-text">Step 4 配置phpstorm的xdebug</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-指定xdebug-port"><span class="nav-number">4.1.</span> <span class="nav-text">1. 指定xdebug port</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-配置DBGp-Proxy"><span class="nav-number">4.2.</span> <span class="nav-text">2. 配置DBGp Proxy</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Step-5-安装chrome扩展-Xdebug-helper"><span class="nav-number">5.</span> <span class="nav-text">Step 5 安装chrome扩展 Xdebug helper</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Step-6-测试"><span class="nav-number">6.</span> <span class="nav-text">Step 6 测试</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -507,6 +690,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
 
   
 
