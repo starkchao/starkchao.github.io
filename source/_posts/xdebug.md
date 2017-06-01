@@ -44,7 +44,7 @@ cp modules/xdebug.so /usr/local/php-7.0.9/lib/php/extensions/no-debug-non-zts-20
 
 在我的php.ini中，关于xdebug的配置如下：
 ![xdebug-config](/img/2017/06/01/xdebug-config.jpg)
-[//]: <img src="/img/2017/06/01/xdebug-config.jpg" width="100" height="100" alt="xdebug-config"/>
+[//]: <> (<img src="/img/2017/06/01/xdebug-config.jpg" width="100" height="100" alt="xdebug-config"/>)
 
 其中remote_host与remote_port按照自己的需求指定。
 保存php.ini后重启apache或nginx。
