@@ -5,6 +5,7 @@ tags:
 - xdebug 
 - php 
 - phpstorm
+categories: "php"
 ---
 如果你现在的调试还是在使用var_dump()或者print_r()，那么xdebug可能会让你的调试更加得心应手，就像平常断点单步调试一样，你可以直观的看见所有的过程与值。
 <!--more-->

@@ -3,7 +3,7 @@ title: First Step
 date: 2017-05-31 15:04:24
 tags:
 - first
-- 构建
+- hexo
 ---
 
 这是我的第一篇博文，采用了`hexo + Github Pages`构建博客网站，其中还用到了`node.js `和 `git`。
