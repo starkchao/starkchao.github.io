@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Time Zone]]></title>
+    <url>%2F2017%2F06%2F08%2Ftimezone%2F</url>
+    <content type="text"><![CDATA[最近在分析CDN拉流日志的时候，看到了这样的时间格式：2017-06-06T00:58:13+08:00一直对于各种时间缩写不太清楚，于是整理一篇关于这方面的内容。 上边的日期格式什么含义？先说结论：2017-06-06T00:58:13+08:00，它代表东八区2017年6月6日00点58分13秒。为什么日期格式中间还有一个T呢？这是国际标准化组织的日期和时间表示方法规定的。 wikipedia链接：国际标准ISO 8601 在ISO 8601中规定，在合并表示日期和时间的时候，要在时间前边加大写字母T +08:00代表，该时间所属的时区是东八区 各种时间概念UTC整个地球被分为24个时区，每个时区都有自己的本地时间，正如上边的北京时间一样。为了统一起见，出现了协调世界时，又称世界标准时间或世界协调时间，简称UTC(Universal Time Coordinated)，是最主要的世界时间标准，其以原子时秒长为基础，在时刻上接近于格林尼治标准时间。 本地时间与UTC转换：UTC + 时区 = 本地时间。时区东为正，西为负。如东八区表示为+08:00。 GMTGMT(Greenwich Mean Time)格林尼治标准时间（有些翻译为格林尼治平均时间）。但是由于地球在它的椭圆轨道里运行速度不均匀，这个时刻可能与实际的太阳时有误差。格林尼治时间基于天文观测本身的缺陷，已经不再被作为标准时间使用。现在的标准时间，是由原子钟报时的协调世界时（UTC）来决定的。 DST夏日节约时间，简称DST(Daylight Saving Time)。夏季太阳升起较早，人为地将时间提前一小时，以充分利用光照资源，节约照明用电。这个构想于1784年由美国班杰明•富兰克林提出来，1915年德国成为第一个正式实施夏令日光节约时间的国家，以削减灯光照明和耗电开支。 自此以后，全球以欧洲和北美为主的约70个国家都引用这个做法。它与UTC和GMT完全没有关系，完全是人为行为。 CSTCST可以指下列的时区： 大中华地区时区：China Standard Time 澳洲中部时间：Central Standard Time (Australia) 中部标准时区（北美洲），Central Standard Time (North America) 古巴标准时间，Cuba Standard Time 因此，CST是转换后的本地时间。如果忽略UTC和GMT的差异，可以认为中国北京的标准时间为： GMT + 8 = UTC + 8 = CST EST/PST等美国横跨西五区至西十区，共六个时区。每个时区对应一个标准时间，从东向西分别为： 东部时间(EST)(西五区时间) 中部时间(CST)(西六区时间) 山地时间(MST)(西七区时间) 太平洋时间(西部时间)(PST)(西八区时间) 阿拉斯加时间(AKST)(西九区时间) 夏威夷时间(HST) (西十区时间)按照“东早西晚”的规律，各递减一小时。 以上所提到的各种时间里，UTC和GMT是和时区无关的，而CST/DST等是与时区紧密相关的。 计算机时间计算机保存的时间是自UTC时间1970年1月1日00:00:00经过的秒数。最早出现的UNIX操作系统考虑到计算机产生的年代和应用的时限综合取了1970年1月1日作为UNIX TIME的纪元时间(开始时间)。时间戳是指格林威治时间1970年01月01日00时00分00秒(北京时间1970年01月01日08时00分00秒)起至现在的总秒数。]]></content>
+      <categories>
+        <category>timezone</category>
+      </categories>
+      <tags>
+        <tag>timezone</tag>
+        <tag>UTC</tag>
+        <tag>GMT</tag>
+        <tag>DST</tag>
+        <tag>CST</tag>
+        <tag>EST</tag>
+        <tag>PST</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[xdebug -- debug tool for php]]></title>
     <url>%2F2017%2F06%2F01%2Fxdebug%2F</url>
     <content type="text"><![CDATA[如果你现在的调试还是在使用var_dump()或者print_r()，那么xdebug可能会让你的调试更加得心应手，就像平常断点单步调试一样，你可以直观的看见所有的过程与值。与任何东西的学习方式一样，官方文档 永远是最好的老师： xdebug官方文档 :) 什么？你不想看英文文档？ 还好你找到了这里~下边是linux下xdebug的安装及配置方法： Step 1 下载并解压xdebug扩展包12wget https://xdebug.org/files/xdebug-2.5.4.tgztar -zxvf xdebug-2.5.4.tgz Tips： 具体下载哪个版本的包，可以到xdebug的download页面查找：download windows用户下载.dll后缀的文件，linux用户下载source包 Step 2 编译xdebug12345cd debug-2.5.4phpize（编译你要添加的扩展模块的命令）./configuremakecp modules/xdebug.so /usr/local/php-7.0.9/lib/php/extensions/no-debug-non-zts-20151012 Step 3 配置php.ini对于PHP5.3之前的版本： add: zend_extension_ts=”/wherever/you/put/it/xdebug.so” 对于PHP5.3之后的版本（我的php版本是7.0.9）： From PHP 5.3 onwards, you always need to use the zend_extension PHP.ini setting name, and not zend_extension_ts, nor zend_extension_debug. 在我的php.ini中，关于xdebug的配置如下： 其中remote_host与remote_port按照自己的需求指定。保存php.ini后重启apache或nginx。 Step 4 配置phpstorm的xdebug1. 指定xdebug port这里的port需要与php.ini配置的remote_port一致。 2. 配置DBGp ProxyIDE Key：与php.ini中xdebug.idekey相同Host：项目所在位置Port：项目监听端口 Step 5 安装chrome扩展 Xdebug helper在IDE Key中选择PhpStorm，并设置Key为PHPSTORM（与之前的xdebug.idekey相同即可） 到此为止，所有的准备工作就已经完成了，下面来测试一下~！ Step 6 测试 在phpstorm中设置代码断点，然后开启debug监听 打开浏览器中Xdebug helper的debug模式 访问存在断点的代码位置如果没问题的话，在phpstorm中应该可以看到： 进入debug控制台点击accept就可以看到debug控制台了 that’s done~!]]></content>
