@@ -106,7 +106,7 @@
 <meta property="og:image" content="https://starkchao.github.io/img/2017/07/10/result-to-log.png">
 <meta property="og:image" content="https://starkchao.github.io/img/2017/07/10/clear-redis.png">
 <meta property="og:image" content="https://starkchao.github.io/img/2017/07/10/run.png">
-<meta property="og:updated_time" content="2017-07-10T10:28:38.519Z">
+<meta property="og:updated_time" content="2017-07-11T02:29:23.966Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ElasticSearch + Redis的一个应用实例">
 <meta name="twitter:description" content="ElasticSearch（ES）作为一个搜索与数据分析引擎，能够对文档进行索引、搜索、排序、过滤等一系列操作。">
@@ -409,39 +409,39 @@
 <li>最终形成的统计结果，怎样实现可视化？</li>
 </ol>
 <h6 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a><font size="3">解决方案</font></h6><ul>
-<li>Q1：ES支持两种翻页方式：<br>（1）第一种是类似于sql中limit，在ES中是from/size。这种方式在数据量不大的情况下是可以使用的，但是在深度分页的情况下效率极低。它的原理是返回size条数据，然后从from处截断。所以当我要查询from=10000，size=10010的数据时，会查询前10010条数据，但是只截取10000-10010条数据返回。这就造成了极大的浪费。<br>（2）第二种是类似于sql中的cursor，在ES中是scroll查询。在查询时添加一个scroll参数，用来指定游标查询的过期时间。<strong>这个时间会在每次查询时刷新，所以这个时间只需要足够处理当前批次的结果就可以了，而不是处理查询结果的所有文档的时间</strong>。</li>
+<li>Q1：ES支持<strong>两种翻页</strong>方式：<br>（1）第一种是类似于sql中limit，在ES中是from/size。这种方式在数据量不大的情况下是可以使用的，但是在深度分页的情况下效率极低。它的原理是返回size条数据，然后从from处截断。所以当我要查询from=10000，size=10010的数据时，会查询前10010条数据，但是只截取10000-10010条数据返回。这就造成了极大的浪费。<br>（2）第二种是类似于sql中的cursor，在ES中是scroll查询。scroll查询会在前一次的查询的基础上继续查询。在查询时添加一个scroll参数，用来指定游标查询的过期时间。<strong>这个时间会在每次查询时刷新，所以这个时间只需要足够处理当前批次的结果就可以了，而不是处理查询结果的所有文档的时间</strong>。对于大批量的数据，需要用scroll查询来获取数据。</li>
 <li>Q2：由于数据量会迅速增大，高效率的查询和更新是必须满足的，redis作为内存型的数据库就是以速度著称。另外省：市：数量 这样的数据结构，可以使用redis中的哈希键（key-field-value）来实现。</li>
 <li>Q3：对于最后的统计结果，可以通过遍历redis中的哈希键来获取field和value，将结果记录到日志文件中。</li>
 </ul>
-<h5 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a><font size="4">代码实现</font></h5><h6 id="ES和Redis配置"><a href="#ES和Redis配置" class="headerlink" title="ES和Redis配置"></a><font size="3">ES和Redis配置</font></h6><p><img src="/img/2017/07/10/es-redis-config.png" alt="es-redis-config"></p>
+<h5 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a><font size="4">代码实现</font></h5><h6 id="1-ES和Redis配置"><a href="#1-ES和Redis配置" class="headerlink" title=" 1 - ES和Redis配置"></a><font size="3"> 1 - ES和Redis配置</font></h6><p><img src="/img/2017/07/10/es-redis-config.png" alt="es-redis-config"></p>
 <blockquote>
 <p>Redis配置主要是host，port和pwd。<br>ES配置中要说明的是type_name，由于在对应的index下有多个type，所以我在这里指定了我要查询的type。</p>
 </blockquote>
-<h6 id="构造方法初始化redis"><a href="#构造方法初始化redis" class="headerlink" title="构造方法初始化redis"></a><font size="3">构造方法初始化redis</font></h6><p><img src="/img/2017/07/10/construct.png" alt="construct"></p>
-<h6 id="初始化查询，获取scroll-id"><a href="#初始化查询，获取scroll-id" class="headerlink" title="初始化查询，获取scroll_id"></a><font size="3">初始化查询，获取scroll_id</font></h6><p><img src="/img/2017/07/10/init-query.png" alt="init-query"></p>
+<h6 id="2-构造方法初始化redis"><a href="#2-构造方法初始化redis" class="headerlink" title="2 - 构造方法初始化redis"></a><font size="3">2 - 构造方法初始化redis</font></h6><p><img src="/img/2017/07/10/construct.png" alt="construct"></p>
+<h6 id="3-初始化查询，获取scroll-id"><a href="#3-初始化查询，获取scroll-id" class="headerlink" title="3 - 初始化查询，获取scroll_id"></a><font size="3">3 - 初始化查询，获取scroll_id</font></h6><p><img src="/img/2017/07/10/init-query.png" alt="init-query"></p>
 <blockquote>
 <p>在ES中使用游标查询，需要在普通的查询基础上，添加scroll参数，值代表游标过期时间，如（scroll=1m）。<br>在查询返回的结果中，得到名为’_scroll_id’的值，作为下一次查询的游标id。</p>
 </blockquote>
-<h6 id="初始化查询后，使用scroll-id继续查询"><a href="#初始化查询后，使用scroll-id继续查询" class="headerlink" title="初始化查询后，使用scroll_id继续查询"></a><font size="3">初始化查询后，使用scroll_id继续查询</font></h6><p><img src="/img/2017/07/10/normal-query.png" alt="normal-query"></p>
+<h6 id="4-初始化查询后，使用scroll-id继续查询"><a href="#4-初始化查询后，使用scroll-id继续查询" class="headerlink" title="4 - 初始化查询后，使用scroll_id继续查询"></a><font size="3">4 - 初始化查询后，使用scroll_id继续查询</font></h6><p><img src="/img/2017/07/10/normal-query.png" alt="normal-query"></p>
 <blockquote>
 <p>在得到游标id以后，就不需要继续指明查询条件了。</p>
 </blockquote>
-<h6 id="使用curl发送请求到es"><a href="#使用curl发送请求到es" class="headerlink" title="使用curl发送请求到es"></a><font size="3">使用curl发送请求到es</font></h6><p><img src="/img/2017/07/10/curl.png" alt="curl"></p>
+<h6 id="5-使用curl发送请求到es"><a href="#5-使用curl发送请求到es" class="headerlink" title="5 - 使用curl发送请求到es"></a><font size="3">5 - 使用curl发送请求到es</font></h6><p><img src="/img/2017/07/10/curl.png" alt="curl"></p>
 <blockquote>
 <p>这里的就是一个常规的curl请求方式。需要注意的是对于传入的data参数的分解，这样处理之后可以支持批量查询，分解的原因参考ES的批量查询。</p>
 </blockquote>
-<h6 id="计算统计分布"><a href="#计算统计分布" class="headerlink" title="计算统计分布"></a><font size="3">计算统计分布</font></h6><p><img src="/img/2017/07/10/count-distribution.png" alt="count-distribution"></p>
+<h6 id="6-计算统计分布"><a href="#6-计算统计分布" class="headerlink" title="6 - 计算统计分布"></a><font size="3">6 - 计算统计分布</font></h6><p><img src="/img/2017/07/10/count-distribution.png" alt="count-distribution"></p>
 <blockquote>
 <p>计算分布时调用了根据GPS信息获取地理位置信息的接口，返回结果里会包含详细的省市县以及街道等信息。</p>
 </blockquote>
-<h6 id="结果写入日志文件"><a href="#结果写入日志文件" class="headerlink" title="结果写入日志文件"></a><font size="3">结果写入日志文件</font></h6><p><img src="/img/2017/07/10/result-to-log.png" alt="result-to-log"></p>
-<h6 id="释放redis中的数据"><a href="#释放redis中的数据" class="headerlink" title="释放redis中的数据"></a><font size="3">释放redis中的数据</font></h6><p><img src="/img/2017/07/10/clear-redis.png" alt="clear-redis"></p>
+<h6 id="7-结果写入日志文件"><a href="#7-结果写入日志文件" class="headerlink" title="7 - 结果写入日志文件"></a><font size="3">7 - 结果写入日志文件</font></h6><p><img src="/img/2017/07/10/result-to-log.png" alt="result-to-log"></p>
+<h6 id="8-释放redis中的数据"><a href="#8-释放redis中的数据" class="headerlink" title="8 - 释放redis中的数据"></a><font size="3">8 - 释放redis中的数据</font></h6><p><img src="/img/2017/07/10/clear-redis.png" alt="clear-redis"></p>
 <blockquote>
 <p>由于在往Redis中存储时使用了哈希键，而键使用了省级名称，所以可以按照省级名称为key的方式，释放Redis当中的数据。</p>
 </blockquote>
-<h6 id="最终的run方法"><a href="#最终的run方法" class="headerlink" title="最终的run方法"></a><font size="3">最终的run方法</font></h6><p><img src="/img/2017/07/10/run.png" alt="run"></p>
+<h6 id="9-最终的run方法"><a href="#9-最终的run方法" class="headerlink" title="9 - 最终的run方法"></a><font size="3">9 - 最终的run方法</font></h6><p><img src="/img/2017/07/10/run.png" alt="run"></p>
 <blockquote>
-<p>综合上边的一系列方法和得到的run方法。</p>
+<p>综合上边的一系列方法后得到的run方法。</p>
 </blockquote>
 <p><font color="red"><strong>注</strong></font>：在使用redis的hGetAll方法时，遇到了段错误（segmentation fault）。当时php版本是7.0.9，在使用php 7.0.16运行脚本后解决。</p>
 
@@ -636,7 +636,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#ElasticSearch"><span class="nav-number">1.</span> <span class="nav-text">ElasticSearch</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Redis"><span class="nav-number">2.</span> <span class="nav-text">Redis</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#应用实例"><span class="nav-number">3.</span> <span class="nav-text">应用实例</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#使用场景"><span class="nav-number">3.1.</span> <span class="nav-text">使用场景</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#存在问题"><span class="nav-number">3.2.</span> <span class="nav-text">存在问题</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#解决方案"><span class="nav-number">3.3.</span> <span class="nav-text">解决方案</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#代码实现"><span class="nav-number">4.</span> <span class="nav-text">代码实现</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#ES和Redis配置"><span class="nav-number">4.1.</span> <span class="nav-text">ES和Redis配置</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#构造方法初始化redis"><span class="nav-number">4.2.</span> <span class="nav-text">构造方法初始化redis</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#初始化查询，获取scroll-id"><span class="nav-number">4.3.</span> <span class="nav-text">初始化查询，获取scroll_id</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#初始化查询后，使用scroll-id继续查询"><span class="nav-number">4.4.</span> <span class="nav-text">初始化查询后，使用scroll_id继续查询</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#使用curl发送请求到es"><span class="nav-number">4.5.</span> <span class="nav-text">使用curl发送请求到es</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#计算统计分布"><span class="nav-number">4.6.</span> <span class="nav-text">计算统计分布</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#结果写入日志文件"><span class="nav-number">4.7.</span> <span class="nav-text">结果写入日志文件</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#释放redis中的数据"><span class="nav-number">4.8.</span> <span class="nav-text">释放redis中的数据</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#最终的run方法"><span class="nav-number">4.9.</span> <span class="nav-text">最终的run方法</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#ElasticSearch"><span class="nav-number">1.</span> <span class="nav-text">ElasticSearch</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Redis"><span class="nav-number">2.</span> <span class="nav-text">Redis</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#应用实例"><span class="nav-number">3.</span> <span class="nav-text">应用实例</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#使用场景"><span class="nav-number">3.1.</span> <span class="nav-text">使用场景</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#存在问题"><span class="nav-number">3.2.</span> <span class="nav-text">存在问题</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#解决方案"><span class="nav-number">3.3.</span> <span class="nav-text">解决方案</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#代码实现"><span class="nav-number">4.</span> <span class="nav-text">代码实现</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-ES和Redis配置"><span class="nav-number">4.1.</span> <span class="nav-text"> 1 - ES和Redis配置</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-构造方法初始化redis"><span class="nav-number">4.2.</span> <span class="nav-text">2 - 构造方法初始化redis</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#3-初始化查询，获取scroll-id"><span class="nav-number">4.3.</span> <span class="nav-text">3 - 初始化查询，获取scroll_id</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#4-初始化查询后，使用scroll-id继续查询"><span class="nav-number">4.4.</span> <span class="nav-text">4 - 初始化查询后，使用scroll_id继续查询</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#5-使用curl发送请求到es"><span class="nav-number">4.5.</span> <span class="nav-text">5 - 使用curl发送请求到es</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#6-计算统计分布"><span class="nav-number">4.6.</span> <span class="nav-text">6 - 计算统计分布</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#7-结果写入日志文件"><span class="nav-number">4.7.</span> <span class="nav-text">7 - 结果写入日志文件</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#8-释放redis中的数据"><span class="nav-number">4.8.</span> <span class="nav-text">8 - 释放redis中的数据</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#9-最终的run方法"><span class="nav-number">4.9.</span> <span class="nav-text">9 - 最终的run方法</span></a></li></ol></li></ol></div>
             
 
           </div>
