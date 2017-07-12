@@ -3,7 +3,9 @@ title: ElasticSearch + Redis的一个应用实例
 date: 2017-07-10 11:40:28
 tags:
 - es
+- ElasticSearch
 - redis
+- scroll
 categories: "es"
 ---
 ##### <font size=4>应用实例</font>
