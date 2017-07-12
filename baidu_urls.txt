@@ -1,1 +1,1 @@
-https://starkchao.github.io/2017/07/10/ElasticSearch-Redis的一个应用实例/
+https://starkchao.github.io/2017/07/10/ElasticSearch-Redis/

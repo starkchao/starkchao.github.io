@@ -298,7 +298,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://starkchao.github.io/2017/07/10/ElasticSearch-Redis的一个应用实例/">
+    <link itemprop="mainEntityOfPage" href="https://starkchao.github.io/2017/07/10/ElasticSearch-Redis/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Chao Wan">
@@ -317,7 +317,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/07/10/ElasticSearch-Redis的一个应用实例/" itemprop="url">ElasticSearch + Redis的一个应用实例</a></h1>
+                <a class="post-title-link" href="/2017/07/10/ElasticSearch-Redis/" itemprop="url">ElasticSearch + Redis的一个应用实例</a></h1>
         
 
         <div class="post-meta">
@@ -387,10 +387,11 @@
 
       
         
-          <p>ElasticSearch（ES）作为一个搜索与数据分析引擎，能够对文档进行索引、搜索、排序、过滤等一系列操作。<br>
+          <h5 id="应用实例"><a href="#应用实例" class="headerlink" title="应用实例"></a><font size="4">应用实例</font></h5><hr>
+<h6 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a><font size="3">使用场景</font></h6><p>在ElasticSearch中的device索引里共有9688085条记录，每条记录包含了一些信息，如用户id，设备guid，设备型号以及用户经纬度。现在希望根据这些数据当中的经纬度值，计算出用户分布的统计结果。当然在对这些数据进行处理之前，肯定是要进行筛选的，比如去除一些没有获取到经纬度的记录等，最后剩余大约700W+的数据。数据筛选的部分暂且略过。<br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/07/10/ElasticSearch-Redis的一个应用实例/#more" rel="contents">
+            <a class="btn" href="/2017/07/10/ElasticSearch-Redis/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

@@ -90,13 +90,13 @@
 
 
 
-<meta name="description" content="ElasticSearch（ES）作为一个搜索与数据分析引擎，能够对文档进行索引、搜索、排序、过滤等一系列操作。">
+<meta name="description" content="应用实例 使用场景在ElasticSearch中的device索引里共有9688085条记录，每条记录包含了一些信息，如用户id，设备guid，设备型号以及用户经纬度。现在希望根据这些数据当中的经纬度值，计算出用户分布的统计结果。当然在对这些数据进行处理之前，肯定是要进行筛选的，比如去除一些没有获取到经纬度的记录等，最后剩余大约700W+的数据。数据筛选的部分暂且略过。">
 <meta name="keywords" content="es,redis">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ElasticSearch + Redis的一个应用实例">
-<meta property="og:url" content="https://starkchao.github.io/2017/07/10/ElasticSearch-Redis的一个应用实例/index.html">
+<meta property="og:url" content="https://starkchao.github.io/2017/07/10/ElasticSearch-Redis/index.html">
 <meta property="og:site_name" content="Stark">
-<meta property="og:description" content="ElasticSearch（ES）作为一个搜索与数据分析引擎，能够对文档进行索引、搜索、排序、过滤等一系列操作。">
+<meta property="og:description" content="应用实例 使用场景在ElasticSearch中的device索引里共有9688085条记录，每条记录包含了一些信息，如用户id，设备guid，设备型号以及用户经纬度。现在希望根据这些数据当中的经纬度值，计算出用户分布的统计结果。当然在对这些数据进行处理之前，肯定是要进行筛选的，比如去除一些没有获取到经纬度的记录等，最后剩余大约700W+的数据。数据筛选的部分暂且略过。">
 <meta property="og:image" content="https://starkchao.github.io/img/2017/07/10/es-redis-config.png">
 <meta property="og:image" content="https://starkchao.github.io/img/2017/07/10/construct.png">
 <meta property="og:image" content="https://starkchao.github.io/img/2017/07/10/init-query.png">
@@ -106,10 +106,10 @@
 <meta property="og:image" content="https://starkchao.github.io/img/2017/07/10/result-to-log.png">
 <meta property="og:image" content="https://starkchao.github.io/img/2017/07/10/clear-redis.png">
 <meta property="og:image" content="https://starkchao.github.io/img/2017/07/10/run.png">
-<meta property="og:updated_time" content="2017-07-11T02:29:23.966Z">
+<meta property="og:updated_time" content="2017-07-12T05:22:01.454Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ElasticSearch + Redis的一个应用实例">
-<meta name="twitter:description" content="ElasticSearch（ES）作为一个搜索与数据分析引擎，能够对文档进行索引、搜索、排序、过滤等一系列操作。">
+<meta name="twitter:description" content="应用实例 使用场景在ElasticSearch中的device索引里共有9688085条记录，每条记录包含了一些信息，如用户id，设备guid，设备型号以及用户经纬度。现在希望根据这些数据当中的经纬度值，计算出用户分布的统计结果。当然在对这些数据进行处理之前，肯定是要进行筛选的，比如去除一些没有获取到经纬度的记录等，最后剩余大约700W+的数据。数据筛选的部分暂且略过。">
 <meta name="twitter:image" content="https://starkchao.github.io/img/2017/07/10/es-redis-config.png">
 
 
@@ -138,7 +138,7 @@
 
 
 
-  <link rel="canonical" href="https://starkchao.github.io/2017/07/10/ElasticSearch-Redis的一个应用实例/"/>
+  <link rel="canonical" href="https://starkchao.github.io/2017/07/10/ElasticSearch-Redis/"/>
 
 
 
@@ -308,7 +308,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://starkchao.github.io/2017/07/10/ElasticSearch-Redis的一个应用实例/">
+    <link itemprop="mainEntityOfPage" href="https://starkchao.github.io/2017/07/10/ElasticSearch-Redis/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Chao Wan">
@@ -394,35 +394,29 @@
       
 
       
-        <p>ElasticSearch（ES）作为一个搜索与数据分析引擎，能够对文档进行索引、搜索、排序、过滤等一系列操作。<br><a id="more"></a></p>
-<h5 id="ElasticSearch"><a href="#ElasticSearch" class="headerlink" title="ElasticSearch"></a><font size="4">ElasticSearch</font></h5><p>ES的优势主要在以下几个方面：</p>
-<ol>
-<li>扩展性：ES天生就是分布式的，它知道如何通过管理多节点来提高扩容性和可用性。当需要进行扩容时，只需要很少的操作，就可以使一个新节点进入集群。</li>
-<li>分布性：同一个索引存在于多个分片上，协调节点在每次请求的时候将选择不同的副本分片来达到负载均衡的目的。</li>
-<li>高可用：在ES集群中的任意一个节点上，都存在一个主分片和若干个副本分片，相同的副本分片不会放在同一个节点上。这样的冗余机制可以在某台服务器宕机的情况下，集群依然正常运行。<br>ES的缺点当然也是存在的，比如在比较繁忙的集群当中，可能会由于网络的阻塞或者节点处理能力饱和而导致各节点元数据不一致，再比如ES没有细致的权限管理机制，这些不是本文的重点，就略过了。</li>
-</ol>
-<h5 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a><font size="4">Redis</font></h5><p>Redis作为一个内存中的数据结构存储系统，可以被用作数据库、缓存和消息中间件。丰富的数据结构类型（如 字符串（strings）， 散列（hashes）， 列表（lists）， 集合（sets）， 有序集合（sorted sets）），对这些类型的原子操作，持久化以及主从复制等功能Redis都能够提供。</p>
-<h5 id="应用实例"><a href="#应用实例" class="headerlink" title="应用实例"></a><font size="4">应用实例</font></h5><h6 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a><font size="3">使用场景</font></h6><p>在device索引中共有9688085条记录，每条记录包含了一些信息，如用户id，设备guid，设备型号以及用户经纬度。现在希望根据这些数据当中的经纬度值，能够得出一个用户分布的统计结果。当然在对这些数据进行处理之前，肯定是要进行筛选的，比如去除一些没有获取到经纬度的记录等，最后剩余大约700W+的数据。数据筛选的部分暂且略过。</p>
+        <h5 id="应用实例"><a href="#应用实例" class="headerlink" title="应用实例"></a><font size="4">应用实例</font></h5><hr>
+<h6 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a><font size="3">使用场景</font></h6><p>在ElasticSearch中的device索引里共有9688085条记录，每条记录包含了一些信息，如用户id，设备guid，设备型号以及用户经纬度。现在希望根据这些数据当中的经纬度值，计算出用户分布的统计结果。当然在对这些数据进行处理之前，肯定是要进行筛选的，比如去除一些没有获取到经纬度的记录等，最后剩余大约700W+的数据。数据筛选的部分暂且略过。<br><a id="more"></a></p>
 <h6 id="存在问题"><a href="#存在问题" class="headerlink" title="存在问题"></a><font size="3">存在问题</font></h6><ol>
-<li>700W+的数据存储在ES当中，如何遍历这些数据？</li>
-<li>对于每一条记录当中的经纬度值，需要调用地理位置信息接口获取该经纬度对应的地址，并按照省市划分，如何在数据量不断增大的同时，能够保证这样的数据结构，并实现快速的存、取？</li>
+<li>700W+的数据存储在ES当中，<font color="red"><strong>如何遍历这些数据</strong></font>？</li>
+<li>对于每一条记录当中的经纬度值，需要调用地理位置信息接口获取该经纬度对应的地址，并按照省市划分，如何在数据量不断增大的同时，能够保证这样的数据结构，并实现<font color="red"><strong>快速的存、取</strong></font>？</li>
 <li>最终形成的统计结果，怎样实现可视化？</li>
 </ol>
 <h6 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a><font size="3">解决方案</font></h6><ul>
-<li>Q1：ES支持<strong>两种翻页</strong>方式：<br>（1）第一种是类似于sql中limit，在ES中是from/size。这种方式在数据量不大的情况下是可以使用的，但是在深度分页的情况下效率极低。它的原理是返回size条数据，然后从from处截断。所以当我要查询from=10000，size=10010的数据时，会查询前10010条数据，但是只截取10000-10010条数据返回。这就造成了极大的浪费。<br>（2）第二种是类似于sql中的cursor，在ES中是scroll查询。scroll查询会在前一次的查询的基础上继续查询。在查询时添加一个scroll参数，用来指定游标查询的过期时间。<strong>这个时间会在每次查询时刷新，所以这个时间只需要足够处理当前批次的结果就可以了，而不是处理查询结果的所有文档的时间</strong>。对于大批量的数据，需要用scroll查询来获取数据。</li>
-<li>Q2：由于数据量会迅速增大，高效率的查询和更新是必须满足的，redis作为内存型的数据库就是以速度著称。另外省：市：数量 这样的数据结构，可以使用redis中的哈希键（key-field-value）来实现。</li>
-<li>Q3：对于最后的统计结果，可以通过遍历redis中的哈希键来获取field和value，将结果记录到日志文件中。</li>
+<li><strong>Q1</strong>：<font color="green"><strong>采用ES的scroll翻页查询</strong></font>。<br>ES支持<strong>两种翻页</strong>方式：<br>（1）第一种是类似于sql中limit，在ES中是from/size。这种方式在数据量不大的情况下是可以使用的，但是在深度分页的情况下效率极低。它的原理是返回size条数据，然后从from处截断。所以当我要查询from=10000，size=10010的数据时，会查询前10010条数据，但是只截取10000-10010条数据返回。这就造成了极大的浪费。<br>（2）第二种是类似于sql中的cursor，在ES中是scroll查询。scroll查询会在前一次的查询的基础上继续查询。在查询时添加一个scroll参数，用来指定游标查询的过期时间。<strong>这个时间会在每次查询时刷新，所以这个时间只需要足够处理当前批次的结果就可以了，而不是处理查询结果的所有文档的时间</strong>。对于大批量的数据，需要用scroll查询来获取数据。</li>
+<li><strong>Q2</strong>：<font color="green"><strong>使用Redis做存储和查询</strong></font>。<br>Redis作为一个内存中的数据结构存储系统，可以被用作数据库、缓存和消息中间件。丰富的数据结构类型（如 字符串（strings）， 散列（hashes）， 列表（lists）， 集合（sets）， 有序集合（sorted sets）），对这些类型的原子操作，持久化以及主从复制等功能Redis都能够提供。<br>由于数据量会迅速增大，高效率的查询和更新是必须满足的，redis作为内存型的数据库就是以速度著称。另外省：市：数量 这样的数据结构，可以使用redis中的哈希键（key-field-value）来实现。</li>
+<li><strong>Q3</strong>：统计结果写入日志文件。<br>对于最后的统计结果，可以通过遍历redis中的哈希键来获取field和value，将结果记录到日志文件中。</li>
 </ul>
-<h5 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a><font size="4">代码实现</font></h5><h6 id="1-ES和Redis配置"><a href="#1-ES和Redis配置" class="headerlink" title=" 1 - ES和Redis配置"></a><font size="3"> 1 - ES和Redis配置</font></h6><p><img src="/img/2017/07/10/es-redis-config.png" alt="es-redis-config"></p>
+<h5 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a><font size="4">代码实现</font></h5><hr>
+<h6 id="1-ES和Redis配置"><a href="#1-ES和Redis配置" class="headerlink" title=" 1 - ES和Redis配置"></a><font size="3"> 1 - ES和Redis配置</font></h6><p><img src="/img/2017/07/10/es-redis-config.png" alt="es-redis-config"></p>
 <blockquote>
 <p>Redis配置主要是host，port和pwd。<br>ES配置中要说明的是type_name，由于在对应的index下有多个type，所以我在这里指定了我要查询的type。</p>
 </blockquote>
 <h6 id="2-构造方法初始化redis"><a href="#2-构造方法初始化redis" class="headerlink" title="2 - 构造方法初始化redis"></a><font size="3">2 - 构造方法初始化redis</font></h6><p><img src="/img/2017/07/10/construct.png" alt="construct"></p>
-<h6 id="3-初始化查询，获取scroll-id"><a href="#3-初始化查询，获取scroll-id" class="headerlink" title="3 - 初始化查询，获取scroll_id"></a><font size="3">3 - 初始化查询，获取scroll_id</font></h6><p><img src="/img/2017/07/10/init-query.png" alt="init-query"></p>
+<h6 id="3-初始化查询，获取scroll-id-★"><a href="#3-初始化查询，获取scroll-id-★" class="headerlink" title="3 - 初始化查询，获取scroll_id [★]"></a><font size="3">3 - 初始化查询，获取scroll_id </font><font color="red">[★]</font></h6><p><img src="/img/2017/07/10/init-query.png" alt="init-query"></p>
 <blockquote>
 <p>在ES中使用游标查询，需要在普通的查询基础上，添加scroll参数，值代表游标过期时间，如（scroll=1m）。<br>在查询返回的结果中，得到名为’_scroll_id’的值，作为下一次查询的游标id。</p>
 </blockquote>
-<h6 id="4-初始化查询后，使用scroll-id继续查询"><a href="#4-初始化查询后，使用scroll-id继续查询" class="headerlink" title="4 - 初始化查询后，使用scroll_id继续查询"></a><font size="3">4 - 初始化查询后，使用scroll_id继续查询</font></h6><p><img src="/img/2017/07/10/normal-query.png" alt="normal-query"></p>
+<h6 id="4-初始化查询后，使用scroll-id继续查询-★"><a href="#4-初始化查询后，使用scroll-id继续查询-★" class="headerlink" title="4 - 初始化查询后，使用scroll_id继续查询[★]"></a><font size="3">4 - 初始化查询后，使用scroll_id继续查询</font><font color="red">[★]</font></h6><p><img src="/img/2017/07/10/normal-query.png" alt="normal-query"></p>
 <blockquote>
 <p>在得到游标id以后，就不需要继续指明查询条件了。</p>
 </blockquote>
@@ -430,7 +424,7 @@
 <blockquote>
 <p>这里的就是一个常规的curl请求方式。需要注意的是对于传入的data参数的分解，这样处理之后可以支持批量查询，分解的原因参考ES的批量查询。</p>
 </blockquote>
-<h6 id="6-计算统计分布"><a href="#6-计算统计分布" class="headerlink" title="6 - 计算统计分布"></a><font size="3">6 - 计算统计分布</font></h6><p><img src="/img/2017/07/10/count-distribution.png" alt="count-distribution"></p>
+<h6 id="6-计算统计分布-★"><a href="#6-计算统计分布-★" class="headerlink" title="6 - 计算统计分布[★]"></a><font size="3">6 - 计算统计分布</font><font color="red">[★]</font></h6><p><img src="/img/2017/07/10/count-distribution.png" alt="count-distribution"></p>
 <blockquote>
 <p>计算分布时调用了根据GPS信息获取地理位置信息的接口，返回结果里会包含详细的省市县以及街道等信息。</p>
 </blockquote>
@@ -636,7 +630,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#ElasticSearch"><span class="nav-number">1.</span> <span class="nav-text">ElasticSearch</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Redis"><span class="nav-number">2.</span> <span class="nav-text">Redis</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#应用实例"><span class="nav-number">3.</span> <span class="nav-text">应用实例</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#使用场景"><span class="nav-number">3.1.</span> <span class="nav-text">使用场景</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#存在问题"><span class="nav-number">3.2.</span> <span class="nav-text">存在问题</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#解决方案"><span class="nav-number">3.3.</span> <span class="nav-text">解决方案</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#代码实现"><span class="nav-number">4.</span> <span class="nav-text">代码实现</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-ES和Redis配置"><span class="nav-number">4.1.</span> <span class="nav-text"> 1 - ES和Redis配置</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-构造方法初始化redis"><span class="nav-number">4.2.</span> <span class="nav-text">2 - 构造方法初始化redis</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#3-初始化查询，获取scroll-id"><span class="nav-number">4.3.</span> <span class="nav-text">3 - 初始化查询，获取scroll_id</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#4-初始化查询后，使用scroll-id继续查询"><span class="nav-number">4.4.</span> <span class="nav-text">4 - 初始化查询后，使用scroll_id继续查询</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#5-使用curl发送请求到es"><span class="nav-number">4.5.</span> <span class="nav-text">5 - 使用curl发送请求到es</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#6-计算统计分布"><span class="nav-number">4.6.</span> <span class="nav-text">6 - 计算统计分布</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#7-结果写入日志文件"><span class="nav-number">4.7.</span> <span class="nav-text">7 - 结果写入日志文件</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#8-释放redis中的数据"><span class="nav-number">4.8.</span> <span class="nav-text">8 - 释放redis中的数据</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#9-最终的run方法"><span class="nav-number">4.9.</span> <span class="nav-text">9 - 最终的run方法</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#应用实例"><span class="nav-number">1.</span> <span class="nav-text">应用实例</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#使用场景"><span class="nav-number">1.1.</span> <span class="nav-text">使用场景</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#存在问题"><span class="nav-number">1.2.</span> <span class="nav-text">存在问题</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#解决方案"><span class="nav-number">1.3.</span> <span class="nav-text">解决方案</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#代码实现"><span class="nav-number">2.</span> <span class="nav-text">代码实现</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-ES和Redis配置"><span class="nav-number">2.1.</span> <span class="nav-text"> 1 - ES和Redis配置</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-构造方法初始化redis"><span class="nav-number">2.2.</span> <span class="nav-text">2 - 构造方法初始化redis</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#3-初始化查询，获取scroll-id-★"><span class="nav-number">2.3.</span> <span class="nav-text">3 - 初始化查询，获取scroll_id [★]</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#4-初始化查询后，使用scroll-id继续查询-★"><span class="nav-number">2.4.</span> <span class="nav-text">4 - 初始化查询后，使用scroll_id继续查询[★]</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#5-使用curl发送请求到es"><span class="nav-number">2.5.</span> <span class="nav-text">5 - 使用curl发送请求到es</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#6-计算统计分布-★"><span class="nav-number">2.6.</span> <span class="nav-text">6 - 计算统计分布[★]</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#7-结果写入日志文件"><span class="nav-number">2.7.</span> <span class="nav-text">7 - 结果写入日志文件</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#8-释放redis中的数据"><span class="nav-number">2.8.</span> <span class="nav-text">8 - 释放redis中的数据</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#9-最终的run方法"><span class="nav-number">2.9.</span> <span class="nav-text">9 - 最终的run方法</span></a></li></ol></li></ol></div>
             
 
           </div>
