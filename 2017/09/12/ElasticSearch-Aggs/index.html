@@ -74,7 +74,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="es," />
 
 
 
@@ -90,15 +90,20 @@
 
 
 
-<meta name="description" content="Sow nothing, reap nothing.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Stark">
-<meta property="og:url" content="https://starkchao.github.io/tags/timezone/index.html">
+<meta name="description" content="在ElasticSearch中，通过聚合我们可以向数据提出一些更为复杂和精细的问题，这样的问题是对数据的分析和总结，而不再是寻找单个文档。">
+<meta name="keywords" content="es">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ElasticSearch中嵌套聚合的使用">
+<meta property="og:url" content="https://starkchao.github.io/2017/09/12/ElasticSearch-Aggs/index.html">
 <meta property="og:site_name" content="Stark">
-<meta property="og:description" content="Sow nothing, reap nothing.">
+<meta property="og:description" content="在ElasticSearch中，通过聚合我们可以向数据提出一些更为复杂和精细的问题，这样的问题是对数据的分析和总结，而不再是寻找单个文档。">
+<meta property="og:image" content="https://starkchao.github.io/img/2017/09/12/es-chat-query.png">
+<meta property="og:image" content="https://starkchao.github.io/img/2017/09/12/es-expend-query.png">
+<meta property="og:updated_time" content="2017-09-12T08:05:52.597Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Stark">
-<meta name="twitter:description" content="Sow nothing, reap nothing.">
+<meta name="twitter:title" content="ElasticSearch中嵌套聚合的使用">
+<meta name="twitter:description" content="在ElasticSearch中，通过聚合我们可以向数据提出一些更为复杂和精细的问题，这样的问题是对数据的分析和总结，而不再是寻找单个文档。">
+<meta name="twitter:image" content="https://starkchao.github.io/img/2017/09/12/es-chat-query.png">
 
 
 
@@ -126,13 +131,13 @@
 
 
 
-  <link rel="canonical" href="https://starkchao.github.io/tags/timezone/"/>
+  <link rel="canonical" href="https://starkchao.github.io/2017/09/12/ElasticSearch-Aggs/"/>
 
 
 
 
 
-  <title>标签: timezone | Stark</title>
+  <title>ElasticSearch中嵌套聚合的使用 | Stark</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -158,7 +163,7 @@
     
   
 
-  <div class="container sidebar-position-left  ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -286,44 +291,214 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h1>timezone<small>标签</small>
-      </h1>
-    </div>
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://starkchao.github.io/2017/09/12/ElasticSearch-Aggs/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chao Wan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Stark">
+    </span>
 
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ElasticSearch中嵌套聚合的使用</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-12T13:56:29+08:00">
+                2017-09-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/es/" itemprop="url" rel="index">
+                    <span itemprop="name">es</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/09/12/ElasticSearch-Aggs/" class="leancloud_visitors" data-flag-title="ElasticSearch中嵌套聚合的使用">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
       
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+      
+        <p>在ElasticSearch中，通过聚合我们可以向数据提出一些更为复杂和精细的问题，这样的问题是对数据的分析和总结，而不再是寻找单个文档。<a id="more"></a>下边首先介绍在ES中关于聚合的一些概念，随后会给出几个嵌套聚合的使用实例。<br><!--more--></p>
+<h5 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a><font size="4">基本概念</font></h5><hr>
+<h6 id="桶"><a href="#桶" class="headerlink" title="桶"></a><font size="3">桶</font></h6><p>桶简单来说就是满足特定条件的文档的集合，桶也可以进行嵌套，提供更为复杂和精细的划分方案。此外，ElasticSearch提供多种类型的桶，能让你通过多种方式来划分文档。</p>
+<h6 id="指标"><a href="#指标" class="headerlink" title="指标"></a><font size="3">指标</font></h6><p>通过桶，我们将文档划分到了有意义的集合中，但这还不够。我们需要对桶内的文档按照某些指标进行计算。大多数指标是简单的数学运算（例如最大/最小值，平均值）。</p>
+<hr>
+<p><strong>将桶和指标结合起来，就可以开始使用聚合了</strong>。</p>
+<hr>
+<h5 id="应用实例"><a href="#应用实例" class="headerlink" title="应用实例"></a><font size="4">应用实例</font></h5><hr>
+<h6 id="1-计算弹幕量"><a href="#1-计算弹幕量" class="headerlink" title=" 1 - 计算弹幕量"></a><font size="3"> 1 - 计算弹幕量</font></h6><ul>
+<li>计算要求：<br>现在需要按照房间计算每五分钟里的弹幕量，给出结果里的前一百名。根据要求，可以看出<strong>两个聚合条件</strong>：首先，以房间为维度进行聚合，之后嵌套聚合里按照时间进行划分，时间跨度为5分钟。</li>
+<li>ES查询语句：<br><img src="/img/2017/09/12/es-chat-query.png" alt="es-chat-query"></li>
+<li>查询语句解析：</li>
+<li>① size设置为0，因为我们并<strong>不关心搜索结果的具体内容</strong>，我们关心的是聚合以后的结果。</li>
+<li>② query里指定搜索的条件，这里用到了正则表达式来对弹幕内容进行过滤。</li>
+<li>③ aggs（与完整形式aggregations等价）就是聚合操作，它被<strong>置于顶层参数</strong>之下。<blockquote>
+<p>聚合名称：xid。<br>桶的类型：terms桶。terms桶会为每个碰到的唯一词项创建新的桶。在这里我们指定了room字段，即为每个房间创建一个桶。<br>结果数量：size指定为100，返回前100条。</p>
+</blockquote>
+</li>
+<li>④ 接下来是一个<strong>嵌套桶</strong>。<blockquote>
+<p>聚合名称：times。<br>桶的类型：date_histogram桶。</p>
+<blockquote>
+<p>时间间隔：interval字段代表时间间隔，这里指定为5分钟。<br>时区：将es中记录的标准时间转换为东八区时间。<br>文档数量：限制文档数量最小值，来减少返回结果的大小。<br>排序规则：按照文档数量，降序排序。</p>
+</blockquote>
+</blockquote>
+</li>
+</ul>
+<hr>
+<h6 id="2-计算消费总价"><a href="#2-计算消费总价" class="headerlink" title=" 2 - 计算消费总价"></a><font size="3"> 2 - 计算消费总价</font></h6><ul>
+<li>计算要求：<br>与前一个实例要求类似，区别在于计算消费总价相当于又多了一层聚合的嵌套。</li>
+<li>ES查询语句：<br><img src="/img/2017/09/12/es-expend-query.png" alt="es-expend-query"></li>
+<li>查询语句解析：</li>
+<li>① query里指定搜索的条件，这里用到了<strong>前缀匹配</strong>来对字段进行过滤。</li>
+<li>② 第三层聚合利用里sum度量指标，来计算每个房间以五分钟为时间间隔的消费总价。</li>
+</ul>
 
-      <h2 class="post-title">
+      
+    </div>
+
+    <div>
+      
         
-            <a class="post-title-link" href="/2017/06/08/timezone/" itemprop="url">
-              
-                <span itemprop="name">Time Zone</span>
-              
-            </a>
+
+      
+    </div>
+
+    <div>
+      
         
-      </h2>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-06-08T10:57:20+08:00"
-              content="2017-06-08" >
-          06-08
-        </time>
-      </div>
+      
+    </div>
 
-    </header>
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/es/" rel="tag"># es</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/10/ElasticSearch-Redis/" rel="next" title="ElasticSearch + Redis的一个应用实例">
+                <i class="fa fa-chevron-left"></i> ElasticSearch + Redis的一个应用实例
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </article>
 
 
-    
-  </div>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -331,6 +506,12 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDE5NC82NzQ5"></div>
+    
+  </div>
+
 
         </div>
         
@@ -350,8 +531,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.jpg"
@@ -424,6 +614,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#基本概念"><span class="nav-number">1.</span> <span class="nav-text">基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#桶"><span class="nav-number">1.1.</span> <span class="nav-text">桶</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#指标"><span class="nav-number">1.2.</span> <span class="nav-text">指标</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#应用实例"><span class="nav-number">2.</span> <span class="nav-text">应用实例</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#1-计算弹幕量"><span class="nav-number">2.1.</span> <span class="nav-text"> 1 - 计算弹幕量</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#2-计算消费总价"><span class="nav-number">2.2.</span> <span class="nav-text"> 2 - 计算消费总价</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -555,6 +761,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
 
   
 
@@ -589,6 +799,17 @@
 
 
 
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
   
 
 

@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://starkchao.github.io/2017/09/12/ElasticSearch-Aggs/</loc>
+    
+    <lastmod>2017-09-12T08:05:52.597Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://starkchao.github.io/2017/07/10/ElasticSearch-Redis/</loc>
     
     <lastmod>2017-07-12T05:25:43.108Z</lastmod>
