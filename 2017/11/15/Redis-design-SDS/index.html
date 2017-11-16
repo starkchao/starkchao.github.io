@@ -86,7 +86,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="redis," />
 
 
 
@@ -102,15 +102,25 @@
 
 
 
-<meta name="description" content="Sow nothing, reap nothing.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Stark">
-<meta property="og:url" content="https://starkchao.github.io/tags/DST/index.html">
+<meta name="description" content="Redis没有直接使用C语言传统的字符串表示（以空字符（’\0’）结尾的字符数组），而是自己构建了一种名为简单动态字符串（simply dynamic string，SDS）的抽象类型，并将SDS用作Redis的默认字符串表示。">
+<meta name="keywords" content="redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《Redis设计与实现》笔记：数据结构与对象 - 简单动态字符串">
+<meta property="og:url" content="https://starkchao.github.io/2017/11/15/Redis-design-SDS/index.html">
 <meta property="og:site_name" content="Stark">
-<meta property="og:description" content="Sow nothing, reap nothing.">
+<meta property="og:description" content="Redis没有直接使用C语言传统的字符串表示（以空字符（’\0’）结尾的字符数组），而是自己构建了一种名为简单动态字符串（simply dynamic string，SDS）的抽象类型，并将SDS用作Redis的默认字符串表示。">
+<meta property="og:image" content="https://starkchao.github.io/img/2017/11/15/sds-example.png">
+<meta property="og:image" content="https://starkchao.github.io/img/2017/11/15/sds-overflow-1.png">
+<meta property="og:image" content="https://starkchao.github.io/img/2017/11/15/sds-overflow-2.png">
+<meta property="og:image" content="https://starkchao.github.io/img/2017/11/15/sds-modify-1.png">
+<meta property="og:image" content="https://starkchao.github.io/img/2017/11/15/sds-modify-2.png">
+<meta property="og:image" content="https://starkchao.github.io/img/2017/11/15/sds-trim.png">
+<meta property="og:image" content="https://starkchao.github.io/img/2017/11/15/sds-diff.png">
+<meta property="og:updated_time" content="2017-11-16T08:30:54.564Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Stark">
-<meta name="twitter:description" content="Sow nothing, reap nothing.">
+<meta name="twitter:title" content="《Redis设计与实现》笔记：数据结构与对象 - 简单动态字符串">
+<meta name="twitter:description" content="Redis没有直接使用C语言传统的字符串表示（以空字符（’\0’）结尾的字符数组），而是自己构建了一种名为简单动态字符串（simply dynamic string，SDS）的抽象类型，并将SDS用作Redis的默认字符串表示。">
+<meta name="twitter:image" content="https://starkchao.github.io/img/2017/11/15/sds-example.png">
 
 
 
@@ -138,13 +148,13 @@
 
 
 
-  <link rel="canonical" href="https://starkchao.github.io/tags/DST/"/>
+  <link rel="canonical" href="https://starkchao.github.io/2017/11/15/Redis-design-SDS/"/>
 
 
 
 
 
-  <title>标签: DST | Stark</title>
+  <title>《Redis设计与实现》笔记：数据结构与对象 - 简单动态字符串 | Stark</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -170,7 +180,7 @@
     
   
 
-  <div class="container sidebar-position-left  ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -298,44 +308,278 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h1>DST<small>标签</small>
-      </h1>
-    </div>
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://starkchao.github.io/2017/11/15/Redis-design-SDS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chao Wan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Stark">
+    </span>
 
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">《Redis设计与实现》笔记：数据结构与对象 - 简单动态字符串</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-15T17:17:39+08:00">
+                2017-11-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/11/15/Redis-design-SDS/" class="leancloud_visitors" data-flag-title="《Redis设计与实现》笔记：数据结构与对象 - 简单动态字符串">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
       
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+      
+        <p>Redis没有直接使用C语言传统的字符串表示（以空字符（’\0’）结尾的字符数组），而是自己构建了一种名为<strong>简单动态字符串</strong>（<strong>simply dynamic string，SDS</strong>）的抽象类型，并将SDS用作Redis的默认字符串表示。<br><a id="more"></a></p>
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a><font color="#0099ff" size="5">简介</font></h3><p>在Redis里，C字符串只会作为字符串字面量，用在一些无需对字符串值进行修改的地方，比如打印日志：</p>
+<blockquote>
+<p>redisLog(REDIS_WARNING,”Redis is now ready to exit, bye bye…”);</p>
+</blockquote>
+<p>当Redis需要一个可以被修改的字符串值时，Redis就会使用SDS来表示字符串值，比如包含字符串值的键值对在底层就是由SDS实现的。</p>
+<p>例如客户端执行命令：</p>
+<blockquote>
+<p>redis&gt; SET msg “hello world”<br>OK</p>
+</blockquote>
+<p>那么Redis将在数据库中创建了一个新的键值对，其中：</p>
+<ul>
+<li>键值对的键是一个字符串对象，对象的底层实现是一个保存着字符串“msg”的SDS</li>
+<li>键值对的值也是一个字符串对象，对象的底层实现是一个保存着字符串“hello world”的SDS</li>
+</ul>
+<h3 id="SDS的定义"><a href="#SDS的定义" class="headerlink" title="SDS的定义"></a><font color="#0099ff" size="5">SDS的定义</font></h3><p>SDS图示例：<div align="center"><img src="/img/2017/11/15/sds-example.png" alt="sds-example">图1</div></p>
+<ul>
+<li>free属性值为0，代表SDS没有未使用空间</li>
+<li>len属性值为5，代表SDS保存了5字节长的字符串</li>
+<li>buf属性是一个char类型的数组，数组前五个字节分别保存了’R’,’e’,’d’,’i’,’s’，最后一个字节保存了空字符’\0’<br>可以看到，<strong>SDS遵循了C字符串以空字符结尾的惯例</strong>，这样做的好处是SDS可以直接重用C字符串里的一些函数。<br>此外，保存空字符的1字节空间不计算在SDS的len属性里面。为空字符分配1字节空间以及添加空字符到字符串末尾等操作都是由SDS函数自动完成。</li>
+</ul>
+<h3 id="SDS与C字符串的区别"><a href="#SDS与C字符串的区别" class="headerlink" title="SDS与C字符串的区别"></a><font color="#0099ff" size="5">SDS与C字符串的区别</font></h3><p>SDS比传统的C字符串更能满足Redis对字符串在安全性、效率、已经功能方面的要求。</p>
+<h5 id="1-常数复杂度获取字符串长度"><a href="#1-常数复杂度获取字符串长度" class="headerlink" title="1.常数复杂度获取字符串长度"></a>1.常数复杂度获取字符串长度</h5><p>由于C字符串并不记录自身的长度信息，所以为了获取一个字符串的长度，必须遍历整个字符串，对遇到的每个字符进行计数，直到遇到代表字符串结尾的空字符为止，这个操作的复杂度为O(N)。<br>而SDS在len属性中记录了SDS本身的长度，所以获取一个SDS长度的复杂度为O(1)，并且设置和更新SDS长度的工作是由SDS的API在执行时自动完成的。<br>通过使用SDS，Redis将获取字符串长度所需的复杂度从O(N)降低到了O(1)，这确保了获取字符串长度的工作不会成为Redis的性能瓶颈。</p>
+<h5 id="2-杜绝缓冲区溢出"><a href="#2-杜绝缓冲区溢出" class="headerlink" title="2.杜绝缓冲区溢出"></a>2.杜绝缓冲区溢出</h5><p>C字符串不记录自身长度带来的另外一个问题就是<strong>容易造成缓冲区溢出</strong>（buffer overflow）<br>举个例子，strcat函数将src字符串中的内容拼接到dest字符串的末尾：</p>
+<blockquote>
+<p>char <em>strcat(char </em>dest, const char *src);</p>
+</blockquote>
+<p>由于C字符串不记录自身的长度，所以strcat假定用户在执行这个函数时，已经为dest分配了足够多的内存，可以容纳src字符串中的所有内容，而一旦这个假设不成立时，就会产生<strong>缓冲区溢出</strong>。</p>
+<p>举个例子，假如程序里有两个在内存中紧邻着的C字符串s1和s2，其中s1保存了字符串“Redis”，s2保存了字符串“MongoDB”，如下图：<div align="center"><img src="/img/2017/11/15/sds-overflow-1.png" alt="sds-overflow-1">图2</div><br>如果执行：</p>
+<blockquote>
+<p>strcat(s1, “ Cluster”);</p>
+</blockquote>
+<p>目的是将s1的内容修改为“Redis Cluster”，但在执行之前却没有为s1分配足够的空间，那么在strcat函数执行之后，<strong>s1的数据将溢出到s2所在的空间中</strong>，导致s2保存的内容被意外地修改，<div align="center"><img src="/img/2017/11/15/sds-overflow-2.png" alt="sds-overflow-2">图3</div></p>
+<p>与C字符串不同，<strong>SDS的空间分配策略完全杜绝了发生缓冲区溢出的可能性</strong>。举个例子：SDS的API里面也有一个执行拼接操作的sdscat函数，它可以将一个C字符串拼接到给定SDS所保存的字符串的后面，但是在执行拼接操作之前，sdscat会先检查给定SDS的空间是否足够（<strong>利用free属性</strong>），如果不够的话，sdscat就会先扩展SDS的空间，然后才执行拼接操作。下边的小节对SDS的空间分配策略进行说明。</p>
+<h5 id="3-减少修改字符串时带来的内存重分配次数"><a href="#3-减少修改字符串时带来的内存重分配次数" class="headerlink" title="3.减少修改字符串时带来的内存重分配次数"></a>3.减少修改字符串时带来的内存重分配次数</h5><p>由于C字符串并不记录自身长度，所以每次增长或缩短一个C字符串，程序都要对保存这个C字符串的数组进行一次内存重分配操作，包括扩展底层数组的空间大小或释放不再使用的那部分空间。<br>在一般的程序中，如果修改字符串的情况不太常出现，那么每次修改都执行一次内存重分配是可以接受的。但Redis被应用于数据被频繁修改的场合，显然每次都执行内存重分配是无法接受的。</p>
+<font color="#FF6A6A"><strong>敲黑板画重点了</strong></font>:<br>为了避免C字符串的这种缺陷，在SDS中使用free属性来标识未使用空间，通过未使用空间，SDS实现了<strong><font color="#FF6A6A">空间预分配</font></strong>和<strong><font color="#FF6A6A">惰性空间释放</font></strong>两种优化策略。<br>- <font color="#A2CD5A">空间预分配</font>
 
-      <h2 class="post-title">
+<p>空间预分配用于优化SDS的字符串增长操作：当SDS的API对一个SDS进行修改，并且需要对SDS进行空间扩展的时候，程序不仅会为SDS分配修改所必须要的空间，还会为SDS分配额外的未使用空间。<br>其中，额外分配的未使用空间数量由以下公式决定：</p>
+<ul>
+<li>如果对SDS进行修改之后，SDS的长度（即len属性值）小于1MB，那么程序分配和len属性同样大小的未使用空间，这时SDS len属性的值将和free属性的值相同。</li>
+<li>如果对SDS进行修改之后，SDS的长度大于等于1MB，那么程序会分配1MB的未使用空间。</li>
+</ul>
+<p>举个例子,对于图1所示的SDS值，如果我们执行</p>
+<blockquote>
+<p>sdscat(s, “ Cluster”);</p>
+</blockquote>
+<p>那么sdscat将执行一次内存重分配操作，将SDS的长度（len属性）修改为13字节，并将SDS的未使用空间（free属性）同样修改为13字节，如下图：<div align="center"><img src="/img/2017/11/15/sds-modify-1.png" alt="sds-modify-1">图4</div><br>如果这时，我们再次执行:</p>
+<blockquote>
+<p>sdscat(s, “ Tutorial”);</p>
+</blockquote>
+<p>那么这次sdscat将不需要执行内存重分配：因为未使用空间里面的13字节足以保存9字节的”Tutorial”，执行之后如下图：<div align="center"><img src="/img/2017/11/15/sds-modify-2.png" alt="sds-modify-2">图5</div><br>通过这种预分配策略，SDS将连续增长N次字符串所需的内存重分配次数，<strong>从必定的N次降低为最多N次</strong>。</p>
+<ul>
+<li><font color="#A2CD5A">惰性空间释放</font>
+
+</li>
+</ul>
+<p>惰性空间释放用于优化SDS的字符串缩短操作：当SDS的API需要缩短SDS保存的字符串时，程序并不立即使用内存重分配来回收缩短后多出来的字节，而是使用free属性将这些字节的数量记录，并等待将来使用。</p>
+<blockquote>
+<p>举个例子，sdstrim函数接受一个SDS和一个C字符串作为参数，从SDS左右两端分别移除所有在C字符串中出现过的字符，比如执行：<br>sdstrim(s, “XY”);   // 移除 SDS 字符串中的所有 ‘X’ 和 ‘Y’</p>
+</blockquote>
+<p>会将SDS修改为如下图的样子：<div align="center"><img src="/img/2017/11/15/sds-trim.png" alt="sds-trim">图6</div><br>注意执行sdstrim之后的SDS并没有释放多出来的8字节空间，而是<strong>将这8字节空间作为未使用空间保留在了SDS里面</strong>，如果将来要对SDS进行增长操作的话，这些未使用空间就可能派上用场了。</p>
+<blockquote>
+<p>举个例子，如果现在执行：<br>sdscat(s, “ Redis”);</p>
+</blockquote>
+<p>那么完成这次sdscat操作将不需要执行内存重分配：因为SDS里面预留的8字节空间已经足以拼接6字节长的”Redis”。</p>
+<p><font color="#FF6A6A"><strong>重点来了</strong></font>：<strong>通过惰性空间释放策略，SDS避免了缩短字符串时所需的内存重分配操作，并为将来可能有的增长操作提供了优化</strong>。<br>与此同时，SDS也提供了相应的API，在有需要时，真正地释放SDS里面的未使用空间，因而不必担心惰性空间释放策略会造成内存浪费。</p>
+<h5 id="4-二进制安全"><a href="#4-二进制安全" class="headerlink" title="4.二进制安全"></a>4.二进制安全</h5><p>C字符串除了字符串的末尾之外，字符串里面不能包含空字符，否则最先被程序读入的空字符将被误认为是字符串结尾——这些限制使得C字符串只能保存文本数据，而不能保存像图片、音频、视频这样的二进制数据。而SDS的API都是二进制安全的：所有SDS API都会以处理二进制的方式来处理SDS存放在buf数组的数据。<br>通过使用二进制安全的SDS，使得Redis不仅可以保存文本数据，还可以保存任意格式的二进制数据。</p>
+<h5 id="5-兼容部分C字符串函数"><a href="#5-兼容部分C字符串函数" class="headerlink" title="5.兼容部分C字符串函数"></a>5.兼容部分C字符串函数</h5><p>虽然SDS的API都是二进制安全的，但它们一样遵循C字符串以空字符结尾的惯例，因此SDS可以在有需要时重用<string.h>函数库，从而避免了不必要的代码重复。</string.h></p>
+<h3 id="总结一下"><a href="#总结一下" class="headerlink" title="总结一下"></a><font color="#0099ff" size="5">总结一下</font></h3><p><font color="#FF6A6A"><strong>最后的重点</strong></font>:C字符串和SDS之间的区别：</p>
+<div align="left"><img src="/img/2017/11/15/sds-diff.png" alt="sds-diff"></div>
+
+
+
+
+
+
+
+
+      
+    </div>
+
+    <div>
+      
         
-            <a class="post-title-link" href="/2017/06/08/timezone/" itemprop="url">
-              
-                <span itemprop="name">Time Zone</span>
-              
-            </a>
+
+      
+    </div>
+
+    <div>
+      
         
-      </h2>
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat_paycode.jpg" alt="Chao Wan WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.jpg" alt="Chao Wan Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-06-08T10:57:20+08:00"
-              content="2017-06-08" >
-          06-08
-        </time>
-      </div>
 
-    </header>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/redis/" rel="tag"># redis</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/12/ElasticSearch-Aggs/" rel="next" title="ElasticSearch中嵌套聚合的使用">
+                <i class="fa fa-chevron-left"></i> ElasticSearch中嵌套聚合的使用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </article>
 
 
-    
-  </div>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -343,6 +587,12 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDE5NC82NzQ5"></div>
+    
+  </div>
+
 
         </div>
         
@@ -362,8 +612,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.jpg"
@@ -436,6 +695,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SDS的定义"><span class="nav-number">2.</span> <span class="nav-text">SDS的定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SDS与C字符串的区别"><span class="nav-number">3.</span> <span class="nav-text">SDS与C字符串的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-常数复杂度获取字符串长度"><span class="nav-number">3.0.1.</span> <span class="nav-text">1.常数复杂度获取字符串长度</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-杜绝缓冲区溢出"><span class="nav-number">3.0.2.</span> <span class="nav-text">2.杜绝缓冲区溢出</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-减少修改字符串时带来的内存重分配次数"><span class="nav-number">3.0.3.</span> <span class="nav-text">3.减少修改字符串时带来的内存重分配次数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-二进制安全"><span class="nav-number">3.0.4.</span> <span class="nav-text">4.二进制安全</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-兼容部分C字符串函数"><span class="nav-number">3.0.5.</span> <span class="nav-text">5.兼容部分C字符串函数</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结一下"><span class="nav-number">4.</span> <span class="nav-text">总结一下</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -572,6 +847,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
 
   
 
@@ -606,6 +885,17 @@
 
 
 
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
   
 
 
