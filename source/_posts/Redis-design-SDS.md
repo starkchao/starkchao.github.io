@@ -92,7 +92,7 @@ C字符串除了字符串的末尾之外，字符串里面不能包含空字符�
 ##### 5.兼容部分C字符串函数
 虽然SDS的API都是二进制安全的，但它们一样遵循C字符串以空字符结尾的惯例，因此SDS可以在有需要时重用<string.h>函数库，从而避免了不必要的代码重复。
 
-### <font color=#0099ff size=5>总结一下</font>
+<font color=#0099ff size=5>总结一下</font>
 <font color=#FF6A6A>**最后的重点**</font>:C字符串和SDS之间的区别：
 <div align=left>![sds-diff](/img/2017/11/15/sds-diff.png)</div>
 
