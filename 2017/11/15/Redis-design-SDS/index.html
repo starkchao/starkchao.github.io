@@ -116,7 +116,7 @@
 <meta property="og:image" content="https://starkchao.github.io/img/2017/11/15/sds-modify-2.png">
 <meta property="og:image" content="https://starkchao.github.io/img/2017/11/15/sds-trim.png">
 <meta property="og:image" content="https://starkchao.github.io/img/2017/11/15/sds-diff.png">
-<meta property="og:updated_time" content="2017-11-16T08:30:54.564Z">
+<meta property="og:updated_time" content="2017-11-16T10:11:12.549Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="《Redis设计与实现》笔记：数据结构与对象 - 简单动态字符串">
 <meta name="twitter:description" content="Redis没有直接使用C语言传统的字符串表示（以空字符（’\0’）结尾的字符数组），而是自己构建了一种名为简单动态字符串（simply dynamic string，SDS）的抽象类型，并将SDS用作Redis的默认字符串表示。">
@@ -483,7 +483,8 @@
 <p><font color="#FF6A6A"><strong>重点来了</strong></font>：<strong>通过惰性空间释放策略，SDS避免了缩短字符串时所需的内存重分配操作，并为将来可能有的增长操作提供了优化</strong>。<br>与此同时，SDS也提供了相应的API，在有需要时，真正地释放SDS里面的未使用空间，因而不必担心惰性空间释放策略会造成内存浪费。</p>
 <h5 id="4-二进制安全"><a href="#4-二进制安全" class="headerlink" title="4.二进制安全"></a>4.二进制安全</h5><p>C字符串除了字符串的末尾之外，字符串里面不能包含空字符，否则最先被程序读入的空字符将被误认为是字符串结尾——这些限制使得C字符串只能保存文本数据，而不能保存像图片、音频、视频这样的二进制数据。而SDS的API都是二进制安全的：所有SDS API都会以处理二进制的方式来处理SDS存放在buf数组的数据。<br>通过使用二进制安全的SDS，使得Redis不仅可以保存文本数据，还可以保存任意格式的二进制数据。</p>
 <h5 id="5-兼容部分C字符串函数"><a href="#5-兼容部分C字符串函数" class="headerlink" title="5.兼容部分C字符串函数"></a>5.兼容部分C字符串函数</h5><p>虽然SDS的API都是二进制安全的，但它们一样遵循C字符串以空字符结尾的惯例，因此SDS可以在有需要时重用<string.h>函数库，从而避免了不必要的代码重复。</string.h></p>
-<h3 id="总结一下"><a href="#总结一下" class="headerlink" title="总结一下"></a><font color="#0099ff" size="5">总结一下</font></h3><p><font color="#FF6A6A"><strong>最后的重点</strong></font>:C字符串和SDS之间的区别：</p>
+<p><font color="#0099ff" size="5">总结一下</font></p>
+<p><font color="#FF6A6A"><strong>最后的重点</strong></font>:C字符串和SDS之间的区别：</p>
 <div align="left"><img src="/img/2017/11/15/sds-diff.png" alt="sds-diff"></div>
 
 
@@ -705,7 +706,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SDS的定义"><span class="nav-number">2.</span> <span class="nav-text">SDS的定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SDS与C字符串的区别"><span class="nav-number">3.</span> <span class="nav-text">SDS与C字符串的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-常数复杂度获取字符串长度"><span class="nav-number">3.0.1.</span> <span class="nav-text">1.常数复杂度获取字符串长度</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-杜绝缓冲区溢出"><span class="nav-number">3.0.2.</span> <span class="nav-text">2.杜绝缓冲区溢出</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-减少修改字符串时带来的内存重分配次数"><span class="nav-number">3.0.3.</span> <span class="nav-text">3.减少修改字符串时带来的内存重分配次数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-二进制安全"><span class="nav-number">3.0.4.</span> <span class="nav-text">4.二进制安全</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-兼容部分C字符串函数"><span class="nav-number">3.0.5.</span> <span class="nav-text">5.兼容部分C字符串函数</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结一下"><span class="nav-number">4.</span> <span class="nav-text">总结一下</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SDS的定义"><span class="nav-number">2.</span> <span class="nav-text">SDS的定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SDS与C字符串的区别"><span class="nav-number">3.</span> <span class="nav-text">SDS与C字符串的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-常数复杂度获取字符串长度"><span class="nav-number">3.0.1.</span> <span class="nav-text">1.常数复杂度获取字符串长度</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-杜绝缓冲区溢出"><span class="nav-number">3.0.2.</span> <span class="nav-text">2.杜绝缓冲区溢出</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-减少修改字符串时带来的内存重分配次数"><span class="nav-number">3.0.3.</span> <span class="nav-text">3.减少修改字符串时带来的内存重分配次数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-二进制安全"><span class="nav-number">3.0.4.</span> <span class="nav-text">4.二进制安全</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-兼容部分C字符串函数"><span class="nav-number">3.0.5.</span> <span class="nav-text">5.兼容部分C字符串函数</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
