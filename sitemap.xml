@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://starkchao.github.io/2017/11/17/Redis-design-Lists/</loc>
+    
+    <lastmod>2017-11-17T07:36:06.814Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://starkchao.github.io/2017/11/15/Redis-design-SDS/</loc>
     
     <lastmod>2017-11-16T10:11:12.549Z</lastmod>
